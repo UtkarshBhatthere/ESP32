@@ -1,0 +1,26 @@
+{
+    "configurations": [
+        {
+            "name": "Linux",
+            "includePath": [
+                "${workspaceFolder}/**",
+                "/home/utkarshbhatt/esp/esp-idf/components/driver/include/driver",
+                "/home/utkarshbhatt/esp/esp-idf/components/esp32/include",
+                "/home/utkarshbhatt/esp/esp-idf/components/soc/esp32/include",
+                "/home/utkarshbhatt/esp/esp-idf/components/soc/include",
+                "/home/utkarshbhatt/esp/esp-idf/components/spi_flash/include",
+                "/home/utkarshbhatt/esp/esp-idf/components/driver/include",
+                "/home/utkarshbhatt/esp/esp-idf/components/freertos/include",
+                "/home/utkarshbhatt/esp/esp-idf/components/newlib/include",
+                "/home/utkarshbhatt/esp/esp-idf/components/heap/include",
+                "/home/utkarshbhatt/esp/esp-idf/components/heap/include"
+            ],
+            "defines": [],
+            "compilerPath": "/usr/bin/gcc",
+            "cStandard": "c11",
+            "cppStandard": "c++17",
+            "intelliSenseMode": "clang-x64"
+        }
+    ],
+    "version": 4
+}

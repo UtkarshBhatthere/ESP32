@@ -1,0 +1,94 @@
+{
+	"version": "0.1.0",
+	"command": "",
+	"args": [
+		"-c"
+	],
+	"isShellCommand": true,
+	"showOutput": "always",
+	"echoCommand": true,
+	"linux": {
+		"options": {
+			"cwd": "${workspaceRoot}",
+			"env": {
+				"IDF_PATH": "${workspaceRoot}/esp-idf",
+				"PATH": "${env.PATH}:/home/esp/xtensa-esp32-elf/bin",
+				"projectname": "thisProject",
+				"openOCDPath": "/home/esp/openocd-esp32-sysprogs",
+				"XtensaPath": "/home/esp/xtensa-esp32-elf",
+				"XtensaEsp32ELFBinPath": "${XtensaPath}/bin"
+			}
+		}
+	},
+	"tasks": [
+		{
+			"taskName": "Build",
+			"suppressTaskName": true,
+			"args": [
+				"make -j8 V=1" //"make -j8 V=1 flash log"
+			],
+			"isBuildCommand": true,
+			"problemMatcher": {
+				"owner": "cpp",
+				"fileLocation": "absolute",
+				"pattern": {
+					"regexp": "^(.*):(\\d+):(\\d+):\\s+(warning|error):\\s+(.*)$",
+					"file": 1,
+					"line": 2,
+					"column": 3,
+					"severity": 4,
+					"message": 5
+				}
+			}
+		},
+		{
+			"taskName": "Monitor",
+			"suppressTaskName": true,
+			"args": [
+				"python /home/esp/esp-idf/tools/idf_monitor.py --port /dev/ttyUSB0 --baud 115200 build/thisProject.elf"
+			]
+		},
+		{
+			"taskName": "Clean",
+			"suppressTaskName": true,
+			"args": [
+				"make clean"
+			]
+		},
+		{
+			"taskName": "Flash",
+			"suppressTaskName": true,
+			"args": [
+				"make flash"
+			]
+		},
+		{
+			"taskName": "Assembly",
+			"suppressTaskName": true,
+			"args": [
+				"xtensa-esp32-elf-objdump -D -S build/${projectname}.elf > ${projectname}Assembly.txt"
+			]
+		},
+		{
+			"taskName": "OpenOCD",
+			"suppressTaskName": true,
+			"args": [
+				"${openOCDPath}/src/openocd -s ${openOCDPath}/tcl -f ${openOCDPath}/esp32.cfg" //-c \"adapter_khz 3000\"
+			]
+		},
+		{
+			"taskName": "DumpELF",
+			"suppressTaskName": true,
+			"args": [
+				"xtensa-esp32-elf-objdump -x build/${projectname}.elf > ${projectname}ObjDump.txt"
+			]
+		},
+		{
+			"taskName": "Erase",
+			"suppressTaskName": true,
+			"args": [
+				"make erase_flash"
+			]
+		}
+	]
+}
