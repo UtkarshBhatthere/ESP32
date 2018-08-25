@@ -8,7 +8,29 @@ static void print_avaiable_AP(uint16_t num){
         ESP_ERROR_CHECK(esp_wifi_scan_get_ap_records(&num, records));
 
         for(int i = 0; i<num; i++){
-            printf(" WIFI_NAME : %s, WIFI_RSSI: %d, WIFI_AUTHMODE: %d\n", records[i].bssid, records[i].rssi, records[i].authmode); 
+            char *authmode;
+
+            switch(records[i].authmode) {
+                case WIFI_AUTH_OPEN:
+                authmode = "WIFI_AUTH_OPEN";
+                break;
+                case WIFI_AUTH_WEP:
+                authmode = "WIFI_AUTH_WEP";
+                break;
+                case WIFI_AUTH_WPA_PSK:
+                authmode = "WIFI_AUTH_WPA_PSK";
+                break;
+                case WIFI_AUTH_WPA2_PSK:
+                authmode = "WIFI_AUTH_WPA2_PSK";
+                break;
+                case WIFI_AUTH_WPA_WPA2_PSK:
+                authmode = "WIFI_AUTH_WPA_WPA2_PSK";
+                break;
+                default:
+                authmode = "Unknown";
+                break;
+            }
+            printf(" WIFI_NAME : %s, WIFI_RSSI: %d, WIFI_AUTHMODE: %s\n", records[i].ssid, records[i].rssi, authmode); 
         }
     free(records);
 }
