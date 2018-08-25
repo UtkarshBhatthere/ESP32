@@ -1,3 +1,4 @@
+#if 0 // Make it one when you have to use this.
 #include "freertos/FreeRTOS.h"
 #include "esp_wifi.h"
 #include "esp_system.h"
@@ -12,20 +13,6 @@
 void app_main(void)
 {
     
-    nvs_flash_init();
-    tcpip_adapter_init();
-
-    ESP_ERROR_CHECK(esp_event_loop_init(wifi_event_handler , NULL))
-    wifi_setup();
-
-    xTaskCreate(&start_scan, "Wifi Scan Task", configMINIMAL_STACK_SIZE, NULL, 4, NULL);
-
-    gpio_set_direction(GPIO_NUM_2, GPIO_MODE_OUTPUT);
-    int level = 0;
-    while (true) {
-        gpio_set_level(GPIO_NUM_2, level);
-        level = !level;
-        vTaskDelay( 1000 / portTICK_PERIOD_MS);
-    }
 }
 
+#endif //Code Control.
