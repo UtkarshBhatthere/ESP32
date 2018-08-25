@@ -3,7 +3,7 @@
 
 /*   Static API's   */
 
-static void print_avaiable_AP(uint16_t num){
+static void wifi_print_available_AP(uint16_t num){
     wifi_ap_record_t *records = (wifi_ap_record_t *)malloc(sizeof(wifi_ap_record_t)*num);
         ESP_ERROR_CHECK(esp_wifi_scan_get_ap_records(&num, records));
 
@@ -32,6 +32,7 @@ static void print_avaiable_AP(uint16_t num){
             }
             printf(" WIFI_NAME : %s, WIFI_RSSI: %d, WIFI_AUTHMODE: %s\n", records[i].ssid, records[i].rssi, authmode); 
         }
+    wifi_check_required_AP(records, num, set_station());
     free(records);
 }
 
@@ -44,6 +45,19 @@ static wifi_config_t set_station(void){
         }
     };
     return sta_conf;
+}
+
+static void wifi_check_required_AP(wifi_ap_record_t *records, int number, wifi_config_t param){
+    bool flag = false;
+    for(int k = 0; k< number; k++){
+        if(!strcmp((const char*)(records[k].ssid),(const char*)(param.sta.ssid))){
+            flag = true;
+            break;
+        }
+    }
+    if(flag == false){
+        printf("Oops, Provided Access Point is not available!\n");
+    }
 }
 
 
@@ -84,7 +98,7 @@ esp_err_t wifi_scan_handler(void *ctx, system_event_t *event){
         //Storing number of available wifi Access Points.
         uint16_t num = event->event_info.scan_done.number;
         printf(" Total number of Wifi AP's found is : %d\n", num);
-        print_avaiable_AP(event->event_info.scan_done.number);
+        wifi_print_available_AP(event->event_info.scan_done.number);
     }
     return ESP_OK;
 }
@@ -93,7 +107,7 @@ esp_err_t wifi_connect_handler(void *ctx, system_event_t *event){
     if(event->event_id == SYSTEM_EVENT_SCAN_DONE){
         if(event->event_info.scan_done.number){
             printf("%d Wifi Hotspots found\n", event->event_info.scan_done.number);
-            print_avaiable_AP(event->event_info.scan_done.number);
+            wifi_print_available_AP(event->event_info.scan_done.number);
             ESP_ERROR_CHECK(esp_wifi_connect());
         }else
             printf("Sorry, No Wifi Hotspots found");

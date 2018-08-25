@@ -3,10 +3,12 @@
 
 /*   Includes   */
 #include "esp_wifi.h"
+#include <string.h>
 
 /*   Static API's   */
-static void print_avaiable_AP(uint16_t num);
+static void wifi_print_avaiable_AP(uint16_t num);
 static wifi_config_t set_station(void);
+static void wifi_check_required_AP(wifi_ap_record_t *records, int number, wifi_config_t param);
 
 /*   API's   */
 

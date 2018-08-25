@@ -1,5 +1,4 @@
-#if 1 //main Control
-
+#if 0 // main control
 #include "freertos/FreeRTOS.h"
 #include "esp_wifi.h"
 #include "esp_system.h"
@@ -10,7 +9,9 @@
 #include "driver/gpio.h"
 #include "tcpip_adapter.h"
 #include "wifi_config.h"
-#include "GPIO_task.h"
+#include "blink.h"
+
+
 
 void app_main(void)
 {
@@ -21,8 +22,6 @@ void app_main(void)
     ESP_ERROR_CHECK(wifi_setup());
     ESP_ERROR_CHECK(start_scan(wifi_scan_initialiser()));
     //A never ending blink loop!
-    xTaskCreate(blink_task, "Blink Task", 2048, NULL, 5, NULL);
-
+    blink_forever();
 }
-
-#endif //main Control
+#endif // main control
