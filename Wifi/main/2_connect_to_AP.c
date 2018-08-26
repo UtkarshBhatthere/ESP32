@@ -1,5 +1,7 @@
-#if 1 //main Control
+#include "main.h"
 
+#ifdef __USE_TWO_ //main Control
+#define __CONNECT
 #include "freertos/FreeRTOS.h"
 #include "esp_wifi.h"
 #include "esp_system.h"

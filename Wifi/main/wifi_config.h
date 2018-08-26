@@ -3,11 +3,29 @@
 
 /*   Includes   */
 #include "esp_wifi.h"
+#include "main.h"
 #include <string.h>
+
+#ifndef __USE_ONE_
+    #ifndef __USE_TWO_
+            #ifndef __USE_THREE_
+                // Fill this.
+            #endif
+            #ifdef __USE_THREE_
+                #define __BROADCAST
+            #endif
+    #endif
+    #ifdef __USE_TWO_
+        #define __CONNECT
+    #endif
+#endif
+#ifdef __USE_ONE_
+    #define __SCAN
+#endif
 
 /*   Static API's   */
 static void wifi_print_avaiable_AP(uint16_t num);
-static wifi_config_t set_station(void);
+static wifi_config_t wifi_set_station(void);
 static void wifi_check_required_AP(wifi_ap_record_t *records, int number, wifi_config_t param);
 
 /*   API's   */

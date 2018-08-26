@@ -32,11 +32,13 @@ static void wifi_print_available_AP(uint16_t num){
             }
             printf(" WIFI_NAME : %s, WIFI_RSSI: %d, WIFI_AUTHMODE: %s\n", records[i].ssid, records[i].rssi, authmode); 
         }
-    wifi_check_required_AP(records, num, set_station());
+    #ifdef __CONNECT
+    wifi_check_required_AP(records, num, wifi_set_station());
+    #endif
     free(records);
 }
 
-static wifi_config_t set_station(void){
+static wifi_config_t wifi_set_station(void){
     wifi_config_t sta_conf = {
         .sta = {
         .ssid = "Test",
@@ -80,7 +82,7 @@ esp_err_t wifi_setup(void){
     ESP_ERROR_CHECK(esp_wifi_init(&cfg));
     ESP_ERROR_CHECK(esp_wifi_set_storage(WIFI_STORAGE_RAM));
     ESP_ERROR_CHECK(esp_wifi_set_mode(WIFI_MODE_STA));
-    wifi_config_t station = set_station();
+    wifi_config_t station = wifi_set_station();
     ESP_ERROR_CHECK(esp_wifi_set_config(ESP_IF_WIFI_STA, &station));
     ESP_ERROR_CHECK(esp_wifi_start());
     return ESP_OK;

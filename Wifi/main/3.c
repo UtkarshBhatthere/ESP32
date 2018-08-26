@@ -1,4 +1,6 @@
-#if 0 // main control
+#include "main.h"
+
+#ifdef __USE_THREE_ // main control
 #include "freertos/FreeRTOS.h"
 #include "esp_wifi.h"
 #include "esp_system.h"

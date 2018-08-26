@@ -8,8 +8,7 @@ TaskFunction_t blink_task(void){
     //gpio_set_level(GPIO_NUM_2, 1);
     while(1){
     gpio_set_level(GPIO_NUM_2, !gpio_get_level(GPIO_NUM_2));
-    printf("Running %dth time.\n", ++count);
-    vTaskDelay(1000/portTICK_PERIOD_MS);
+    vTaskDelay(500/portTICK_PERIOD_MS);
     }
     return 1;
 }
