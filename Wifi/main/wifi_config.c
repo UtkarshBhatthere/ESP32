@@ -49,6 +49,20 @@ static wifi_config_t wifi_set_station(void){
     return sta_conf;
 }
 
+static wifi_config_t wifi_set_accesspoint(void){
+    wifi_config_t ap_conf = {
+        .ap = {
+        .ssid = "Test AccessPoint",
+        .password = "qwertyuiop",
+        .ssid_hidden = false,
+        .authmode = WIFI_AUTH_WPA2_PSK,
+        .channel = 9,
+        .max_connection = 2
+        }
+    };
+    return ap_conf;
+}
+
 static void wifi_check_required_AP(wifi_ap_record_t *records, int number, wifi_config_t param){
     bool flag = false;
     for(int k = 0; k< number; k++){
@@ -76,14 +90,28 @@ wifi_scan_config_t wifi_scan_initialiser(void){
     return def;
 }
 
+esp_err_t start_scan(wifi_scan_config_t scancon){
+    // First Parameter is scan config var next param is block_bool if true it will block the caller until the scan is done.
+    ESP_ERROR_CHECK(esp_wifi_scan_start(&scancon, 1));
+    return ESP_OK;
+}
+
 // Initializes the wifi!
 esp_err_t wifi_setup(void){
     wifi_init_config_t cfg = WIFI_INIT_CONFIG_DEFAULT();
     ESP_ERROR_CHECK(esp_wifi_init(&cfg));
     ESP_ERROR_CHECK(esp_wifi_set_storage(WIFI_STORAGE_RAM));
-    ESP_ERROR_CHECK(esp_wifi_set_mode(WIFI_MODE_STA));
-    wifi_config_t station = wifi_set_station();
-    ESP_ERROR_CHECK(esp_wifi_set_config(ESP_IF_WIFI_STA, &station));
+
+    #ifdef __STATION
+        ESP_ERROR_CHECK(esp_wifi_set_mode(WIFI_MODE_STA));
+        wifi_config_t station = wifi_set_station();
+        ESP_ERROR_CHECK(esp_wifi_set_config(ESP_IF_WIFI_STA, &station));
+    #endif
+    #ifdef __ACCESSPOINT
+        ESP_ERROR_CHECK(esp_wifi_set_mode(WIFI_MODE_AP));
+        wifi_config_t ap = wifi_set_accesspoint();
+        ESP_ERROR_CHECK(esp_wifi_set_config(ESP_IF_WIFI_AP, &ap));
+    #endif
     ESP_ERROR_CHECK(esp_wifi_start());
     return ESP_OK;
 }
@@ -123,12 +151,20 @@ esp_err_t wifi_connect_handler(void *ctx, system_event_t *event){
     }
     return ESP_OK;
 }
-
-esp_err_t start_scan(wifi_scan_config_t scancon){
-    // First Parameter is scan config var next param is block_bool if true it will block the caller until the scan is done.
-    ESP_ERROR_CHECK(esp_wifi_scan_start(&scancon, 1));
-    return ESP_OK;
+esp_err_t wifi_ap_handler(void *ctx, system_event_t *event){
+    if(event->event_id == SYSTEM_EVENT_AP_STACONNECTED){
+        wifi_sta_list_t records;
+        esp_wifi_ap_get_sta_list(&records);
+        uint8_t num = records.num;
+        printf("A station connected: Total %d\n", num);
+       // for(int k=0;k<=num;k++){
+       // printf("Device %d ip :" IPSTR "\n", k, IP2STR(&(records->ip)));
+       // }
+    }
+return ESP_OK;
 }
+
+
 
 
 /*   Tasks   */
