@@ -1,20 +1,9 @@
 // Put this as #if 1 for this main code to work, and #if 0 in the rest .c files containing app_main().
 #include "main.h"
 #ifdef __USE_ONE_
-
-#include "freertos/FreeRTOS.h"
-#include "esp_wifi.h"
-#include "esp_system.h"
-#include "esp_event.h"
-#include "esp_event_loop.h"
-#include "esp_err.h"
-#include "nvs_flash.h"
-#include "driver/gpio.h"
-#include "tcpip_adapter.h"
-#include "wifi_config.h"
 #include "GPIO_task.h"
 
-
+/*   STATUS : COMPLETE   */
 void app_main(void)
 {
     

@@ -9,5 +9,5 @@
 
 void app_main()
 {
-    xTaskCreate(&gpio_task, "Blink task", 1024, NULL, 4, NULL);
+    xTaskCreate(&gpio_task, "Blink task", 2048, NULL, 4, NULL);
 }

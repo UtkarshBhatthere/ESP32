@@ -5,11 +5,25 @@
 #include "esp_wifi.h"
 #include "main.h"
 #include <string.h>
+#include "tcpip_adapter.h"
+
 
 #ifndef __USE_ONE_
     #ifndef __USE_TWO_
             #ifndef __USE_THREE_
-                // Fill this.
+                #ifndef __USE_FOUR_
+                    #ifndef __USE_FIVE_
+                        // Fill this.
+                    #endif
+                    #ifdef __USE_FIVE_
+                        #define __CONNECT
+                        #define __STATION
+                    #endif
+                #endif
+                #ifdef __USE_FOUR_
+                    #define __CONNECT
+                    #define __STATION
+                #endif
             #endif
             #ifdef __USE_THREE_
                 #define __BROADCAST
@@ -52,6 +66,8 @@ esp_err_t wifi_scan_handler(void *ctx, system_event_t *event);
 esp_err_t wifi_connect_handler(void *ctx, system_event_t *event);
 
 esp_err_t wifi_ap_handler(void *ctx, system_event_t *event);
+
+esp_err_t wifi_http_req_handler(void *ctx, system_event_t *event);
 
 
 /*   Tasks   */

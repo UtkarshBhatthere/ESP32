@@ -98,6 +98,7 @@ esp_err_t start_scan(wifi_scan_config_t scancon){
 
 // Initializes the wifi!
 esp_err_t wifi_setup(void){
+    tcpip_adapter_init();
     wifi_init_config_t cfg = WIFI_INIT_CONFIG_DEFAULT();
     ESP_ERROR_CHECK(esp_wifi_init(&cfg));
     ESP_ERROR_CHECK(esp_wifi_set_storage(WIFI_STORAGE_RAM));
@@ -113,6 +114,7 @@ esp_err_t wifi_setup(void){
         ESP_ERROR_CHECK(esp_wifi_set_config(ESP_IF_WIFI_AP, &ap));
     #endif
     ESP_ERROR_CHECK(esp_wifi_start());
+    printf("WiFi initiated successfully.\n");
     return ESP_OK;
 }
 
@@ -125,7 +127,7 @@ esp_err_t wifi_setup(void){
 esp_err_t wifi_scan_handler(void *ctx, system_event_t *event){
     if(event->event_id == SYSTEM_EVENT_SCAN_DONE){
 
-        //Storing number of available wifi Access Points.
+        //Storing number of available wifi Access Points.static
         uint16_t num = event->event_info.scan_done.number;
         printf(" Total number of Wifi AP's found is : %d\n", num);
         wifi_print_available_AP(event->event_info.scan_done.number);
@@ -151,6 +153,9 @@ esp_err_t wifi_connect_handler(void *ctx, system_event_t *event){
     }
     return ESP_OK;
 }
+
+
+
 esp_err_t wifi_ap_handler(void *ctx, system_event_t *event){
     if(event->event_id == SYSTEM_EVENT_AP_STACONNECTED){
         wifi_sta_list_t records;
@@ -162,6 +167,29 @@ esp_err_t wifi_ap_handler(void *ctx, system_event_t *event){
        // }
     }
 return ESP_OK;
+}
+
+esp_err_t wifi_http_req_handler(void *ctx, system_event_t *event){
+    switch(event->event_id){
+        case SYSTEM_EVENT_STA_START:
+            printf("Connecting ...");
+            ESP_ERROR_CHECK(esp_wifi_connect());
+        break;
+
+        case SYSTEM_EVENT_STA_GOT_IP:
+            xEventGroupSetBits(http_handle, CONNECTED_BIT);
+            break;
+        
+        case SYSTEM_EVENT_STA_DISCONNECTED:
+            xEventGroupClearBits(http_handle, CONNECTED_BIT);
+            ESP_ERROR_CHECK(esp_wifi_connect());
+            break;
+        
+        default:
+            printf("No Idea, what's happening.");
+            break;
+    }
+    return ESP_OK;
 }
 
 

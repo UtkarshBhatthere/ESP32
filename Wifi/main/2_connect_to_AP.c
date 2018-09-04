@@ -1,17 +1,7 @@
 #include "main.h"
+/*   STATUS : COMPLETE   */
 
 #ifdef __USE_TWO_ //main Control
-#define __CONNECT
-#include "freertos/FreeRTOS.h"
-#include "esp_wifi.h"
-#include "esp_system.h"
-#include "esp_event.h"
-#include "esp_event_loop.h"
-#include "esp_err.h"
-#include "nvs_flash.h"
-#include "driver/gpio.h"
-#include "tcpip_adapter.h"
-#include "wifi_config.h"
 #include "GPIO_task.h"
 
 void app_main(void)
